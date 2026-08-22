@@ -36,63 +36,73 @@
             z-index: 0;
         }
 
-        /* Cartoon airplanes flying in background */
+        /* Cartoon airplanes flying in background - FIXED */
         .airplane {
             position: fixed;
-            font-size: 2em;
             z-index: 1;
             pointer-events: none;
-            animation: flyAcross 20s linear infinite;
+            animation: flyAcross linear infinite;
+            opacity: 0.7;
         }
 
         .airplane-1 {
             top: 10%;
             left: -100px;
+            font-size: 3em;
+            animation-duration: 20s;
             animation-delay: 0s;
-            animation-duration: 25s;
         }
 
         .airplane-2 {
             top: 30%;
             left: -100px;
-            animation-delay: 5s;
-            animation-duration: 30s;
-            font-size: 1.5em;
+            font-size: 2em;
+            animation-duration: 25s;
+            animation-delay: 3s;
         }
 
         .airplane-3 {
             top: 50%;
             left: -100px;
-            animation-delay: 10s;
-            animation-duration: 20s;
-            font-size: 2.5em;
+            font-size: 3.5em;
+            animation-duration: 18s;
+            animation-delay: 6s;
         }
 
         .airplane-4 {
             top: 70%;
             left: -100px;
-            animation-delay: 15s;
-            animation-duration: 28s;
-            font-size: 1.8em;
+            font-size: 2.5em;
+            animation-duration: 22s;
+            animation-delay: 9s;
         }
 
         .airplane-5 {
             top: 85%;
             left: -100px;
-            animation-delay: 8s;
-            animation-duration: 22s;
-            font-size: 2.2em;
+            font-size: 2.8em;
+            animation-duration: 28s;
+            animation-delay: 12s;
         }
 
         @keyframes flyAcross {
             0% {
-                transform: translateX(-100px) rotate(0deg);
+                transform: translateX(0) rotate(0deg);
+            }
+            10% {
+                transform: translateX(10vw) rotate(-5deg);
+            }
+            25% {
+                transform: translateX(25vw) rotate(0deg);
             }
             50% {
                 transform: translateX(50vw) rotate(5deg);
             }
+            75% {
+                transform: translateX(75vw) rotate(0deg);
+            }
             100% {
-                transform: translateX(110vw) rotate(0deg);
+                transform: translateX(110vw) rotate(-5deg);
             }
         }
 
@@ -114,6 +124,7 @@
             margin-bottom: 30px;
             position: relative;
             overflow: hidden;
+            z-index: 2;
         }
 
         .logo-section::before {
@@ -563,6 +574,10 @@
             
             .size-chart-container {
                 flex: 0 0 auto;
+            }
+            
+            .airplane {
+                font-size: 1.5em !important;
             }
         }
     </style>
