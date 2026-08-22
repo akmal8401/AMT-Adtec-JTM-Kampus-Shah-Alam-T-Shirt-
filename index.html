@@ -901,33 +901,66 @@
                 alert('Cart is empty!');
                 return;
             }
-            
             if (!uploadedFile) {
                 alert('Please upload payment proof!');
                 return;
             }
-            
+
+            // Change button to show it is loading
+            const btn = document.querySelector('.payment-section .btn');
+            btn.textContent = "⏳ SENDING ORDER...";
+            btn.disabled = true;
+
             const referenceCode = 'AMT-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 5).toUpperCase();
-            
-            document.getElementById('referenceCode').textContent = referenceCode;
-            document.getElementById('successSection').style.display = 'block';
-            
-            // Here you can add code to send order to Google Sheets
-            console.log('AMT ADTECSA Order submitted:', {
-                referenceCode: referenceCode,
-                items: cart,
-                total: cart.reduce((sum, item) => sum + item.price, 0),
-                paymentProof: uploadedFile.name
-            });
-            
-            // Reset
-            cart = [];
-            uploadedFile = null;
-            document.getElementById('fileStatus').textContent = '';
-            updateCartDisplay();
-            
-            // Scroll to success
-            document.getElementById('successSection').scrollIntoView({ behavior: 'smooth' });
+
+            // Convert image to base64 so Google can read it
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Data = e.target.result.split(',')[1];
+                const itemSummary = cart.map(item => `${item.quantity}x ${item.size}`).join(', ');
+
+                const payload = {
+                    reference: referenceCode,
+                    name: cart[0].name,
+                    phone: cart[0].phone,
+                    intake: cart[0].intakeBatch,
+                    items: itemSummary,
+                    total: cart.reduce((sum, item) => sum + item.price, 0),
+                    filename: uploadedFile.name,
+                    mimeType: uploadedFile.type,
+                    image: base64Data
+                };
+
+                // The specific Google Apps Script URL provided by the user
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbwpmaw4HmdLzui04Nty1SnPot4Yp05EeDy_shK0WD9kCMgBYpClhgpt_QhHwqgLklqu/exec';
+
+                try {
+                    // Send data to Google Sheets
+                    await fetch(scriptURL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Prevents browser blocking
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    // Show Success UI
+                    document.getElementById('referenceCode').textContent = referenceCode;
+                    document.getElementById('successSection').style.display = 'block';
+                    
+                    // Reset Cart
+                    cart = [];
+                    uploadedFile = null;
+                    document.getElementById('fileStatus').textContent = '';
+                    updateCartDisplay();
+                    document.getElementById('successSection').scrollIntoView({ behavior: 'smooth' });
+                    
+                } catch (error) {
+                    alert("Error submitting order. Please try again.");
+                } finally {
+                    btn.textContent = "✅ CONFIRM ORDER";
+                    btn.disabled = false;
+                }
+            };
+            reader.readAsDataURL(uploadedFile);
         }
 
         // Reset order
