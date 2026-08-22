@@ -17,6 +17,7 @@
             color: #ffffff;
             min-height: 100vh;
             position: relative;
+            overflow-x: hidden;
         }
 
         /* Aircraft maintenance background with navy blue grid */
@@ -35,12 +36,72 @@
             z-index: 0;
         }
 
+        /* Cartoon airplanes flying in background */
+        .airplane {
+            position: fixed;
+            font-size: 2em;
+            z-index: 1;
+            pointer-events: none;
+            animation: flyAcross 20s linear infinite;
+        }
+
+        .airplane-1 {
+            top: 10%;
+            left: -100px;
+            animation-delay: 0s;
+            animation-duration: 25s;
+        }
+
+        .airplane-2 {
+            top: 30%;
+            left: -100px;
+            animation-delay: 5s;
+            animation-duration: 30s;
+            font-size: 1.5em;
+        }
+
+        .airplane-3 {
+            top: 50%;
+            left: -100px;
+            animation-delay: 10s;
+            animation-duration: 20s;
+            font-size: 2.5em;
+        }
+
+        .airplane-4 {
+            top: 70%;
+            left: -100px;
+            animation-delay: 15s;
+            animation-duration: 28s;
+            font-size: 1.8em;
+        }
+
+        .airplane-5 {
+            top: 85%;
+            left: -100px;
+            animation-delay: 8s;
+            animation-duration: 22s;
+            font-size: 2.2em;
+        }
+
+        @keyframes flyAcross {
+            0% {
+                transform: translateX(-100px) rotate(0deg);
+            }
+            50% {
+                transform: translateX(50vw) rotate(5deg);
+            }
+            100% {
+                transform: translateX(110vw) rotate(0deg);
+            }
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         /* Logo Section */
@@ -160,6 +221,8 @@
             border-radius: 10px;
             padding: 30px;
             margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
         }
 
         .section-title {
@@ -176,7 +239,7 @@
         /* T-Shirt Gallery */
         .tshirt-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: 1fr;
             gap: 30px;
             margin: 20px 0;
             justify-items: center;
@@ -186,11 +249,11 @@
             background: linear-gradient(135deg, #0a0a1a 0%, #000033 100%);
             border: 1px solid #003366;
             border-radius: 10px;
-            padding: 30px;
+            padding: 40px;
             text-align: center;
             transition: all 0.3s;
             width: 100%;
-            max-width: 500px;
+            max-width: 800px;
         }
 
         .tshirt-item:hover {
@@ -201,8 +264,8 @@
 
         .tshirt-item img {
             width: 100%;
-            max-width: 400px;
-            height: 400px;
+            max-width: 700px;
+            height: 500px;
             object-fit: contain;
             border-radius: 5px;
             margin: 0 auto 15px;
@@ -213,34 +276,46 @@
         .tshirt-name {
             color: #ffffff;
             font-weight: bold;
-            font-size: 1.2em;
-            margin: 10px 0;
+            font-size: 1.5em;
+            margin: 15px 0;
         }
 
         .tshirt-price {
             color: #ffffff;
-            font-size: 1.5em;
+            font-size: 2em;
             font-weight: bold;
         }
 
-        /* Size Chart */
-        .size-chart-container {
-            text-align: center;
+        /* Size Selection Layout */
+        .size-selection-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
             margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .size-chart-container {
+            flex: 0 0 200px;
+            text-align: center;
         }
 
         .size-chart-container img {
-            max-width: 100%;
+            width: 200px;
             height: auto;
             border-radius: 10px;
             border: 2px solid #003366;
         }
 
+        .size-buttons-container {
+            flex: 1;
+            min-width: 200px;
+        }
+
         .size-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 10px;
-            margin: 20px 0;
         }
 
         .size-button {
@@ -253,6 +328,7 @@
             text-align: center;
             border-radius: 5px;
             font-weight: bold;
+            width: 100%;
         }
 
         .size-button:hover {
@@ -273,8 +349,9 @@
         .size-button.extra::after {
             content: "+RM5";
             position: absolute;
-            top: -8px;
-            right: -5px;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
             background: #ff0000;
             color: #ffffff;
             font-size: 0.6em;
@@ -475,17 +552,29 @@
                 height: 150px;
             }
             
-            .tshirt-gallery {
-                grid-template-columns: 1fr;
-            }
-            
             .tshirt-item img {
                 height: 300px;
+            }
+            
+            .size-selection-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .size-chart-container {
+                flex: 0 0 auto;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Cartoon Airplanes Flying in Background -->
+    <div class="airplane airplane-1">✈️</div>
+    <div class="airplane airplane-2">🛩️</div>
+    <div class="airplane airplane-3">✈️</div>
+    <div class="airplane airplane-4">🛫</div>
+    <div class="airplane airplane-5">🛩️</div>
+
     <!-- Warning Lights -->
     <div class="warning-lights">
         <div class="warning-light red"></div>
@@ -507,7 +596,7 @@
 
         <!-- T-Shirt Gallery -->
         <div class="section">
-            <h2 class="section-title">🎨 OUR DESIGNS</h2>
+            <h2 class="section-title">🎨 AMT Tshirt Design</h2>
             <div class="tshirt-gallery">
                 <div class="tshirt-item">
                     <img src="tshirt-design.jpeg" alt="AMT ADTECSA T-Shirt Design">
@@ -523,28 +612,33 @@
         <div class="section">
             <h2 class="section-title">📏 SELECT SIZE</h2>
             
-            <!-- Size Chart Image -->
-            <div class="size-chart-container">
-                <img src="size-chart.jpg" alt="AMT ADTECSA Size Chart">
-                <p style="color: #ffffff; margin-top: 10px;">Size Guide - Measurements in inches</p>
+            <div class="size-selection-container">
+                <!-- Size Chart (Small) -->
+                <div class="size-chart-container">
+                    <img src="size-chart.jpg" alt="AMT ADTECSA Size Chart">
+                    <p style="color: #ffffff; margin-top: 10px; font-size: 0.9em;">Size Guide</p>
+                </div>
+
+                <!-- Size Buttons (Vertical) -->
+                <div class="size-buttons-container">
+                    <div class="size-grid">
+                        <div class="size-button" onclick="selectSize(this)">XXS</div>
+                        <div class="size-button" onclick="selectSize(this)">XS</div>
+                        <div class="size-button" onclick="selectSize(this)">S</div>
+                        <div class="size-button" onclick="selectSize(this)">M</div>
+                        <div class="size-button" onclick="selectSize(this)">L</div>
+                        <div class="size-button" onclick="selectSize(this)">XL</div>
+                        <div class="size-button" onclick="selectSize(this)">2XL</div>
+                        <div class="size-button extra" onclick="selectSize(this)">3XL</div>
+                        <div class="size-button extra" onclick="selectSize(this)">4XL</div>
+                        <div class="size-button extra" onclick="selectSize(this)">5XL</div>
+                        <div class="size-button extra" onclick="selectSize(this)">6XL</div>
+                        <div class="size-button extra" onclick="selectSize(this)">7XL</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="size-grid">
-                <div class="size-button" onclick="selectSize(this)">XXS</div>
-                <div class="size-button" onclick="selectSize(this)">XS</div>
-                <div class="size-button" onclick="selectSize(this)">S</div>
-                <div class="size-button" onclick="selectSize(this)">M</div>
-                <div class="size-button" onclick="selectSize(this)">L</div>
-                <div class="size-button" onclick="selectSize(this)">XL</div>
-                <div class="size-button" onclick="selectSize(this)">2XL</div>
-                <div class="size-button extra" onclick="selectSize(this)">3XL</div>
-                <div class="size-button extra" onclick="selectSize(this)">4XL</div>
-                <div class="size-button extra" onclick="selectSize(this)">5XL</div>
-                <div class="size-button extra" onclick="selectSize(this)">6XL</div>
-                <div class="size-button extra" onclick="selectSize(this)">7XL</div>
-            </div>
-
-            <p style="text-align: center; color: #ffffff;">
+            <p style="text-align: center; color: #ffffff; margin-top: 20px;">
                 Base price: RM35 | 3XL and above: +RM5
             </p>
         </div>
