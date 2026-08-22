@@ -300,19 +300,19 @@
         /* Size Selection Layout */
         .size-selection-container {
             display: flex;
-            gap: 30px;
+            gap: 40px;
             align-items: flex-start;
             margin: 20px 0;
             flex-wrap: wrap;
         }
 
         .size-chart-container {
-            flex: 0 0 200px;
+            flex: 0 0 300px;
             text-align: center;
         }
 
         .size-chart-container img {
-            width: 200px;
+            width: 300px;
             height: auto;
             border-radius: 10px;
             border: 2px solid #003366;
@@ -320,31 +320,37 @@
 
         .size-buttons-container {
             flex: 1;
-            min-width: 200px;
+            min-width: 250px;
         }
 
         .size-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
         }
 
         .size-button {
-            padding: 15px;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: linear-gradient(135deg, #0a0a1a 0%, #000033 100%);
             border: 2px solid #003366;
             color: #ffffff;
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
-            border-radius: 5px;
+            border-radius: 10px;
             font-weight: bold;
-            width: 100%;
+            font-size: 1.1em;
+            padding: 10px;
+            min-height: 70px;
         }
 
         .size-button:hover {
             border-color: #ff6b00;
             background: linear-gradient(135deg, #000033 0%, #000066 100%);
+            transform: scale(1.05);
         }
 
         .size-button.selected {
@@ -360,14 +366,14 @@
         .size-button.extra::after {
             content: "+RM5";
             position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
+            top: -8px;
+            right: -8px;
             background: #ff0000;
             color: #ffffff;
-            font-size: 0.6em;
-            padding: 2px 5px;
+            font-size: 0.7em;
+            padding: 3px 6px;
             border-radius: 3px;
+            font-weight: bold;
         }
 
         /* Order Form */
@@ -576,6 +582,20 @@
                 flex: 0 0 auto;
             }
             
+            .size-chart-container img {
+                width: 250px;
+            }
+            
+            .size-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .size-button {
+                min-height: 60px;
+                font-size: 1em;
+            }
+            
             .airplane {
                 font-size: 1.5em !important;
             }
@@ -628,13 +648,13 @@
             <h2 class="section-title">📏 SELECT SIZE</h2>
             
             <div class="size-selection-container">
-                <!-- Size Chart (Small) -->
+                <!-- Size Chart (Larger) -->
                 <div class="size-chart-container">
                     <img src="size-chart.jpg" alt="AMT ADTECSA Size Chart">
-                    <p style="color: #ffffff; margin-top: 10px; font-size: 0.9em;">Size Guide</p>
+                    <p style="color: #ffffff; margin-top: 10px; font-size: 1em;">Size Guide</p>
                 </div>
 
-                <!-- Size Buttons (Vertical) -->
+                <!-- Size Buttons (Square Grid) -->
                 <div class="size-buttons-container">
                     <div class="size-grid">
                         <div class="size-button" onclick="selectSize(this)">XXS</div>
