@@ -176,18 +176,21 @@
         /* T-Shirt Gallery */
         .tshirt-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
             margin: 20px 0;
+            justify-items: center;
         }
 
         .tshirt-item {
             background: linear-gradient(135deg, #0a0a1a 0%, #000033 100%);
             border: 1px solid #003366;
             border-radius: 10px;
-            padding: 20px;
+            padding: 30px;
             text-align: center;
             transition: all 0.3s;
+            width: 100%;
+            max-width: 500px;
         }
 
         .tshirt-item:hover {
@@ -198,11 +201,13 @@
 
         .tshirt-item img {
             width: 100%;
-            height: 250px;
-            object-fit: cover;
+            max-width: 400px;
+            height: 400px;
+            object-fit: contain;
             border-radius: 5px;
-            margin-bottom: 15px;
+            margin: 0 auto 15px;
             background: #ffffff;
+            display: block;
         }
 
         .tshirt-name {
@@ -313,9 +318,13 @@
             background: #000033;
         }
 
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .form-group select option {
+            background: #0a0a1a;
+            color: #ffffff;
         }
 
         /* Payment Section */
@@ -465,6 +474,14 @@
                 width: 150px;
                 height: 150px;
             }
+            
+            .tshirt-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .tshirt-item img {
+                height: 300px;
+            }
         }
     </style>
 </head>
@@ -508,7 +525,7 @@
             
             <!-- Size Chart Image -->
             <div class="size-chart-container">
-                <img src="size-chart.jpeg" alt="AMT ADTECSA Size Chart">
+                <img src="size-chart.jpg" alt="AMT ADTECSA Size Chart">
                 <p style="color: #ffffff; margin-top: 10px;">Size Guide - Measurements in inches</p>
             </div>
 
@@ -548,8 +565,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Delivery Address *</label>
-                    <textarea id="customerAddress" placeholder="Enter complete delivery address"></textarea>
+                    <label>Intake Batch *</label>
+                    <select id="intakeBatch">
+                        <option value="">Select your intake batch</option>
+                        <option value="2-2026">2-2026</option>
+                        <option value="1-2026">1-2026</option>
+                        <option value="2-2025">2-2025</option>
+                        <option value="2-2024">2-2024</option>
+                        <option value="1-2024">1-2024</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -566,11 +590,6 @@
                         <option value="9">9</option>
                         <option value="10">10</option>
                     </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Special Instructions</label>
-                    <textarea id="instructions" placeholder="Any special requirements? (e.g., name on shirt, custom design)"></textarea>
                 </div>
 
                 <button class="btn" onclick="addToCart()">➕ ADD TO CART</button>
@@ -658,12 +677,11 @@
         function addToCart() {
             const name = document.getElementById('customerName').value;
             const phone = document.getElementById('customerPhone').value;
-            const address = document.getElementById('customerAddress').value;
+            const intakeBatch = document.getElementById('intakeBatch').value;
             const quantity = parseInt(document.getElementById('quantity').value);
-            const instructions = document.getElementById('instructions').value;
 
-            if (!name || !phone || !address) {
-                alert('Please fill in all required fields (Name, Phone, Address)');
+            if (!name || !phone || !intakeBatch) {
+                alert('Please fill in all required fields (Name, Phone, Intake Batch)');
                 return;
             }
 
@@ -675,11 +693,10 @@
             const item = {
                 name: name,
                 phone: phone,
-                address: address,
+                intakeBatch: intakeBatch,
                 size: selectedSize,
                 quantity: quantity,
-                price: calculatePrice(selectedSize) * quantity,
-                instructions: instructions
+                price: calculatePrice(selectedSize) * quantity
             };
 
             cart.push(item);
@@ -688,9 +705,8 @@
             // Clear form
             document.getElementById('customerName').value = '';
             document.getElementById('customerPhone').value = '';
-            document.getElementById('customerAddress').value = '';
+            document.getElementById('intakeBatch').value = '';
             document.getElementById('quantity').value = '1';
-            document.getElementById('instructions').value = '';
             selectedSize = null;
             document.querySelectorAll('.size-button').forEach(s => s.classList.remove('selected'));
 
@@ -721,7 +737,8 @@
                             <strong>${item.size}</strong> x ${item.quantity}
                             <br>
                             <small>${item.name} - ${item.phone}</small>
-                            ${item.instructions ? `<br><small style="color: #cccccc;">Note: ${item.instructions}</small>` : ''}
+                            <br>
+                            <small style="color: #cccccc;">Intake: ${item.intakeBatch}</small>
                         </div>
                         <div>
                             RM${item.price}
