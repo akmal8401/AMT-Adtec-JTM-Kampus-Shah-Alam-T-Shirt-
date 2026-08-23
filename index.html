@@ -36,7 +36,7 @@
             z-index: 0;
         }
 
-        /* Cartoon airplanes flying in background - FIXED */
+        /* Cartoon airplanes flying in background */
         .airplane {
             position: fixed;
             z-index: 1;
@@ -300,51 +300,50 @@
         /* Size Selection Layout */
         .size-selection-container {
             display: flex;
-            gap: 40px;
+            gap: 20px;
             align-items: flex-start;
             margin: 20px 0;
             flex-wrap: wrap;
         }
 
         .size-chart-container {
-            flex: 0 0 300px;
+            flex: 0 0 200px;
             text-align: center;
         }
 
         .size-chart-container img {
-            width: 300px;
+            width: 200px;
             height: auto;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 2px solid #003366;
         }
 
         .size-buttons-container {
             flex: 1;
-            min-width: 250px;
+            min-width: 200px;
         }
 
         .size-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
         }
 
         .size-button {
-            aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, #0a0a1a 0%, #000033 100%);
-            border: 2px solid #003366;
+            border: 1px solid #003366;
             color: #ffffff;
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
-            border-radius: 10px;
+            border-radius: 6px;
             font-weight: bold;
-            font-size: 1.1em;
-            padding: 10px;
-            min-height: 70px;
+            font-size: 0.9em;
+            padding: 8px 5px;
+            min-height: 40px;
         }
 
         .size-button:hover {
@@ -366,12 +365,12 @@
         .size-button.extra::after {
             content: "+RM5";
             position: absolute;
-            top: -8px;
-            right: -8px;
+            top: -6px;
+            right: -6px;
             background: #ff0000;
             color: #ffffff;
-            font-size: 0.7em;
-            padding: 3px 6px;
+            font-size: 0.6em;
+            padding: 2px 4px;
             border-radius: 3px;
             font-weight: bold;
         }
@@ -583,17 +582,17 @@
             }
             
             .size-chart-container img {
-                width: 250px;
+                width: 200px;
             }
             
             .size-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
             }
             
             .size-button {
-                min-height: 60px;
-                font-size: 1em;
+                min-height: 35px;
+                font-size: 0.85em;
             }
             
             .airplane {
@@ -771,8 +770,7 @@
             <h2 class="section-title">🎉 ORDER SUCCESSFUL!</h2>
             <div class="reference-code" id="referenceCode"></div>
             <p style="text-align: center; color: #ffffff; margin-top: 20px;">
-                Please save this reference code for your records.<br>
-                Our AMT ADTECSA team will contact you within 24 hours to confirm your order.
+                Please save this reference code for your records.
             </p>
             <button class="btn" onclick="resetOrder()">🔄 NEW ORDER</button>
         </div>
@@ -903,33 +901,66 @@
                 alert('Cart is empty!');
                 return;
             }
-            
             if (!uploadedFile) {
                 alert('Please upload payment proof!');
                 return;
             }
-            
+
+            // Change button to show it is loading
+            const btn = document.querySelector('.payment-section .btn');
+            btn.textContent = "⏳ SENDING ORDER...";
+            btn.disabled = true;
+
             const referenceCode = 'AMT-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 5).toUpperCase();
-            
-            document.getElementById('referenceCode').textContent = referenceCode;
-            document.getElementById('successSection').style.display = 'block';
-            
-            // Here you can add code to send order to Google Sheets
-            console.log('AMT ADTECSA Order submitted:', {
-                referenceCode: referenceCode,
-                items: cart,
-                total: cart.reduce((sum, item) => sum + item.price, 0),
-                paymentProof: uploadedFile.name
-            });
-            
-            // Reset
-            cart = [];
-            uploadedFile = null;
-            document.getElementById('fileStatus').textContent = '';
-            updateCartDisplay();
-            
-            // Scroll to success
-            document.getElementById('successSection').scrollIntoView({ behavior: 'smooth' });
+
+            // Convert image to base64 so Google can read it
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Data = e.target.result.split(',')[1];
+                const itemSummary = cart.map(item => `${item.quantity}x ${item.size}`).join(', ');
+
+                const payload = {
+                    reference: referenceCode,
+                    name: cart[0].name,
+                    phone: cart[0].phone,
+                    intake: cart[0].intakeBatch,
+                    items: itemSummary,
+                    total: cart.reduce((sum, item) => sum + item.price, 0),
+                    filename: uploadedFile.name,
+                    mimeType: uploadedFile.type,
+                    image: base64Data
+                };
+
+                // The specific Google Apps Script URL provided by the user
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbwpmaw4HmdLzui04Nty1SnPot4Yp05EeDy_shK0WD9kCMgBYpClhgpt_QhHwqgLklqu/exec';
+
+                try {
+                    // Send data to Google Sheets
+                    await fetch(scriptURL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Prevents browser blocking
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    // Show Success UI
+                    document.getElementById('referenceCode').textContent = referenceCode;
+                    document.getElementById('successSection').style.display = 'block';
+                    
+                    // Reset Cart
+                    cart = [];
+                    uploadedFile = null;
+                    document.getElementById('fileStatus').textContent = '';
+                    updateCartDisplay();
+                    document.getElementById('successSection').scrollIntoView({ behavior: 'smooth' });
+                    
+                } catch (error) {
+                    alert("Error submitting order. Please try again.");
+                } finally {
+                    btn.textContent = "✅ CONFIRM ORDER";
+                    btn.disabled = false;
+                }
+            };
+            reader.readAsDataURL(uploadedFile);
         }
 
         // Reset order
